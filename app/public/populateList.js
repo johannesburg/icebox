@@ -47,13 +47,13 @@ function onAuth(authData) {
     if (e.keyCode == 13) {
       e.preventDefault();
       var name = input.value;
+      userRef.push({"itemName": name, "itemCount":1});
       return false;
     }
   };
   
   userRef.on('child_added', function(snapshot) {
-     var newItem = snapshot.val();
-     addNewItem(newItem.itemName);
+     addNewItem(snapshot.itemName, snapshot.itemCount);
   });
 }
 
@@ -126,7 +126,7 @@ function onTags(success, url, tags) {
   }
 }
 
-function addNewItem(name) {
+function addNewItem(name, count) {
   var row = document.createElement("tr");
   row.id = name;
   var data = document.createElement("td");
@@ -138,12 +138,12 @@ function addNewItem(name) {
   var input = document.createElement("td");
   var inputField = document.createElement("input");
   inputField.type = "number";
-  inputField.value = 1;
+  inputField.value = count;
   inputField.min = 1;
   inputField.className = "text-center";
   input.appendChild(inputField);
   input.onchange = function(e) {
-    userRef.set({name : input.value});
+    userRef.set({name: input.value});
   }
   row.appendChild(input);
 
