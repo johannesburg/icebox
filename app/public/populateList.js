@@ -71,7 +71,7 @@ function uploadFile(e) {
   reader.onload = (function(theFile) {
     return function(e) {
       var filePayload = e.target.result;
-      var f = new Firebase(basePath + '/imageLoading/' + uid + "/");
+      var f = new Firebase(basePath + '/imageLoading/');
       // Set the file payload to Firebase and register an onComplete handler to stop the spinner and show the preview
       f.set(filePayload, function() { 
         console.log("upload complete");
