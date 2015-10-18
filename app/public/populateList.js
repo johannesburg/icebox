@@ -102,10 +102,13 @@ function fileSelected(e) {
   }
   console.log("Uploading file");
   var file = document.getElementById('fileToUpload').files[0];
+
   // Create our HTTP request
    var http = new XMLHttpRequest();
    http.onload = function() {
-      console.log(http.responseText);
+      var response = JSON.parse(http.responseText));
+      var url = "www.imgur.com/" + response.id;
+      tagURL(url, onTags);
     }
    http.open("POST", "https://api.imgur.com/3/upload");
    http.setRequestHeader('Authorization', 'Client-ID ' + imgurClientID);
@@ -114,30 +117,11 @@ function fileSelected(e) {
    var fd = new FormData();
    fd.append("image", file);
    http.send(fd);
-  /*
-  getDataUri(URL.createObjectURL(file), function(dataUri) {
-
-  });*/
 }
 
-function getDataUri(url, callback) {
-    var image = new Image();
-
-    image.onload = function () {
-        var canvas = document.createElement('canvas');
-        canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
-        canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
-
-        canvas.getContext('2d').drawImage(this, 0, 0);
-
-        // Get raw image data
-        callback(canvas.toDataURL('image/png'));
-        //.replace(/^data:image\/(png|jpg);base64,/, '')
-    };
-
-    image.src = url;
+function onTags(success, url, tags) {
+  console.print(tags);
 }
-
 
 function addNewItem(name) {
   var row = document.createElement("tr");
