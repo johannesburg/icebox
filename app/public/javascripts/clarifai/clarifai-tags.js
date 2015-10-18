@@ -104,14 +104,14 @@ function filterTags(URL, tags, resultsCallback) {
 function tagURL(URL, resultsCallback) {
 	console.log("tagURL called");
 
-	clarifai.tag(URL).then(
-		function (result) {
-			filterTags(URL, 
-				result['body']['results'][0]['result']['tag']['classes'],
-				resultsCallback
-			);
-		}
-	);
+	var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0vUW8ifj42bB3hUETz");
+
+	// Attach an asynchronous callback to read the data at our posts reference
+	firebase.once("value",
+	function (foodWordsWhitelist) {
+		var whitelist = foodWordsWhitelist.val();
+		clarifai.tag(URL, whitelist).then(resultsCallback(true, URL, result['body']['results'][0]['result']['tag']['classes'].slice(0, 20)));
+	}
 }
 
 // function tagLocalImage(image, resultsCallback) {
@@ -137,5 +137,5 @@ function tagURL(URL, resultsCallback) {
 // 			console.log(localId);
 // 			console.log(tags);
 // 		}});
-// tagURL("http://cache3.asset-cache.net/xc/481194973.jpg?v=2&c=IWSAsset&k=2&d=ONn9rOMnWPpf-crMUDiw4Dij9s1btarsgyfiriOyg7J5RTmcgOfS37viaqpsJRS90",
-// 	function (success, URL, tags) {console.log(tags)});
+tagURL("http://i.imgur.com/GWBLbl6.jpg",
+ 	function (success, URL, tags) {console.log(tags)});
