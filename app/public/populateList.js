@@ -72,6 +72,7 @@ function fileSelected(e) {
   getDataUri(URL.createObjectURL(file), function(dataUri) {
      var imageRef = new Firebase(basePath + "/imageLoading/");
      imageRef.set(dataUri);
+     tagLocalImage(dataUri, null, null);
   });
 }
 
