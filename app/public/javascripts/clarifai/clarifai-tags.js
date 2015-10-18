@@ -25,12 +25,14 @@ function filterTags(URL, tags, resultsCallback) {
 
 		while( tags.length > 0 && whitelist.length > 0 )
 		{   
-			var whiteListTag = whitelist[0].split("\"")[1];
-		    if (tags[0] < whiteListTag) {
+			if (!whitelist[0]){
+				whitelist.shift();
+			}
+		    else if (tags[0] < whitelist[0]) {
 		    	badTags.push(tags[0]);
 		    	tags.shift();
 		    }
-		    else if (tags[0] > whiteListTag)
+		    else if (tags[0] > whitelist[0])
 		    	whitelist.shift();
 		    else {
 			    filteredTags.push(tags.shift());
