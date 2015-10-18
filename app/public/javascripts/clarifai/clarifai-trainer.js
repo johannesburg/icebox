@@ -61,9 +61,9 @@ Array.prototype.diff = function(a) {
 function giveFeedback(URL, goodTags, badTags) {
     console.log("giveFeedback called");
 
-    if (goodTags.length() > 0) {
+    if (goodTags.length > 0) {
         clarifai.positive(URL, goodTags.shift()).then(giveFeedback(URL, goodTags, badTags));
-    } else if (badTags.length() > 0) {
+    } else if (badTags.length > 0) {
         clarifai.negative(URL, badTags.shift()).then(giveFeedback(URL, goodTags, badTags));
     } else {
         clarifai.train(URL);
