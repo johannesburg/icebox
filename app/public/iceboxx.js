@@ -30,6 +30,24 @@ function start() {
   ref.onAuth(onAuth);
 }
 
+function addTagToWhitelist(tag){
+    console.log("addTagToWhitelist called");
+    var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0vUW8ifj42bB3hUETz");
+
+    firebase.once("value",
+    function (foodWordsWhitelist) {
+        var whitelist = foodWordsWhitelist.val();
+
+        console.log("addTagToWhitelist whitelist retrived");
+
+        whitelist.push(tag);
+        whitelist.sort();
+        firebase.update(whitelist);
+
+        console.log("addTagToWhitelist whitelist updated");
+    });
+}
+
 function onAuth(authData) {
   if (uid != null && authData == null) {
     uid = null;
