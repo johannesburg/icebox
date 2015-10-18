@@ -26,7 +26,14 @@ function start() {
 }
 
 function onAuth(authData) {
+  showTags(["apple", "orange", "grapefruit", "banana"]);
   document.getElementById("userName").innerHTML = authData.google.displayName;
+  var firstname = authData.google.displayName.split(" ")[0];
+  var suffix = "'s";
+  if (firstname.charAt(firstname.length - 1) == 's')
+    suffix = "'";
+  console.log(firstname.charAt(firstname.length - 1));
+  document.getElementById("fridgeName").innerHTML = firstname + suffix + " Fridge"
   document.getElementById("preMain").style.display = "none";
   document.getElementById("mainContent").style.display = "block";
 
@@ -46,6 +53,29 @@ function onAuth(authData) {
      var newItem = snapshot.val();
      addNewItem(newItem.itemName);
   });
+}
+
+function showTags(tagList) {
+  var index;
+  document.getElementById("tagListDiv").style.display = "block";
+  var tagContainer = document.getElementById("tagList");
+  tagContainer.innerHTML = "";
+  for (index = 0; index < tagList.length; index++) {
+    var newTag = document.createElement("a");
+    newTag.onclick = function(e) {
+      var tar = e.target;
+      if (tar.className != "btn button-padding btn-success") {
+        tar.className = "btn button-padding btn-success";
+      } else {
+        tar.className = "btn button-padding btn-default";
+      }
+    };
+    var newContent = document.createTextNode(tagList[index]);
+    newTag.className = "btn button-padding btn-default";
+    newTag.href = "#";
+    newTag.appendChild(newContent);
+    tagContainer.appendChild(newTag);
+  }
 }
 
 function cameraClick(e) {
@@ -70,8 +100,9 @@ function fileSelected(e) {
   var file = document.getElementById('fileToUpload').files[0];
   // Usage
   getDataUri(URL.createObjectURL(file), function(dataUri) {
+    /*
      var imageRef = new Firebase(basePath + "/imageLoading/");
-     imageRef.set(dataUri);
+     imageRef.set(dataUri);*/
      tagLocalImage(dataUri, null, null);
   });
 }

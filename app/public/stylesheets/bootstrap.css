@@ -4136,6 +4136,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     border-bottom-color: #4e5d6c;
   }
 }
+
+.button-padding {
+  margin-left: 4px;
+  margin-right: 4px;
+}
 .nav-pills > li {
   float: left;
 }
