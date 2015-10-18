@@ -12,7 +12,6 @@
     <script src="./javascripts/clarifai/clarifai-basic.js"></script>
     <script src="./javascripts/clarifai/clarifai-tags.js"></script>
     <script src="./javascripts/clarifai/clarifai-trainer.js"></script>
-    <script src="./javascripts/clarifai/imgur(real).js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]> -->
@@ -53,7 +52,7 @@
           <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
-              <img class="img-responsive" src="logo.png" alt="logo" width="100" height="100"/>
+              <img class="img-responsive" src="logo.png" alt="logo" width="150" height="150"/>
             </div>
             <div class="col-lg-4"></div>
           </div>
@@ -79,7 +78,7 @@
               </div>
           </div>
 
-          <div class="row bottom-buffer">
+          <div class="row bottom-buffer" id="imageInput" style="display: block">
             <div class="col-lg-7 text-center">
               <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" accept="image/*" capture="camera" style="display: none"/>
               <button id="cameraButton" class="btn btn-default" type="button" onclick="cameraClick();">
@@ -90,7 +89,13 @@
             	<i class="fa fa-spinner fa-pulse"></i>
             </div>
           </div>
-
+          
+          <div class="row bottom-buffer" id="imageOutputDiv" style="display: none">
+            <div class="col-lg-7 text-center">
+            	<div class="col-lg-1 text-center" id="imageOutput"></div>
+            </div>
+          </div>
+          
           <div class="row">
             <div class="col-lg-7 text-center input-group">
                     <input type="text" class="form-control" id="itemInput" />
