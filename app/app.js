@@ -11,6 +11,9 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var myFirebaseRef = new Firebase("https://boiling-inferno-5486.firebaseio.com/");
+process.env['CLARIFAI_CLIENT_ID'] = '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP';
+process.env['CLARIFAI_CLIENT_SECRET'] = 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigIW';
+
 
 var app = express();
 
