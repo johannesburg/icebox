@@ -17,16 +17,20 @@ function filterTags(URL, tags, resultsCallback) {
 	firebase.once("value",
 	function (foodWordsWhitelist) {
 		var whitelist = foodWordsWhitelist.val();
+
+		console.log(whitelist);
+
 		var filteredTags = new Array();
 		var badTags = new Array();
 
 		while( tags.length > 0 && whitelist.length > 0 )
 		{   
-		    if (tags[0] < whitelist[0]) {
+			var whiteListTag = whitelist[0].split("\"")[1];
+		    if (tags[0] < whiteListTag) {
 		    	badTags.push(tags[0]);
 		    	tags.shift();
 		    }
-		    else if (tags[0] > whitelist[0])
+		    else if (tags[0] > whiteListTag)
 		    	whitelist.shift();
 		    else {
 			    filteredTags.push(tags.shift());
