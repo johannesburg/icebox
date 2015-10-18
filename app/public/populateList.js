@@ -89,7 +89,6 @@ function cameraClick(e) {
 function fileSelected(e) {
   console.log("Loading files")
   document.getElementById("loadingIcon").style.display = "block";
-  document.getElementById("loadingIcon").style.display = "block";
   var count = document.getElementById('fileToUpload').files.length;
   for (var index = 0; index < count; index ++) {
     var file = document.getElementById('fileToUpload').files[index];
@@ -106,6 +105,7 @@ function fileSelected(e) {
   // Create our HTTP request
    var http = new XMLHttpRequest();
    http.onload = function() {
+      document.getElementById("loadingIcon").style.display = "none";
       var response = JSON.parse(http.responseText));
       var url = "www.imgur.com/" + response.id;
       tagURL(url, onTags);
