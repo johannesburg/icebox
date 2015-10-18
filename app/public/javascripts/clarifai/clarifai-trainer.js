@@ -6,7 +6,7 @@ var clarifai = new Clarifai({id: '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP', sec
 //@param addedTags new tags added by user
 //@param selectedTags tags selected by user
 function giveFeedback(URL, goodTags, badTags) {
-    console.log("giveFeedback called");
+    console.log(URL + goodTags + badTags);
 
     goodTags.forEach(function (tag) {
         clarifai.positive(URL, tag, callback).then(
@@ -31,8 +31,6 @@ function giveFeedback(URL, goodTags, badTags) {
             promiseRejected
         );
     });
-
-
 }
 
 function promiseResolved(obj){

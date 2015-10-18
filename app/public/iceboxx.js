@@ -45,6 +45,11 @@ function addTagToWhitelist(tag){
 
         whitelist.push(tag);
         whitelist.sort();
+
+        while (!whitelist[0]){
+            whitelist.shift();
+        }
+
         firebase.update(whitelist);
 
         console.log("addTagToWhitelist whitelist updated");
