@@ -5,26 +5,28 @@ var $ = function(tag) {return document.getElementById(tag);};
 
 function start() {
   ref = new Firebase(basePath);
-
-  ref.authWithOAuthPopup("google", function(error, authData) {
-    if (error) {
-      console.log("Login Failed!", error);
-    } else {
-      console.log("Authenticated successfully with payload:", authData);
-      // save the user's profile into the database so we can list users,
-      // use them in Security and Firebase Rules, and show profiles
-      ref.child("users").child(authData.uid).set({
-        provider: authData.provider,
-        name: authData.google.displayName
-      });
-      uid = authData.uid;
-      onAuth(authData);
-    }
-  });
+  document.getElementById("loginButton").onclick = function (e) {
+    ref.authWithOAuthPopup("google", function(error, authData) {
+      if (error) {
+        console.log("Login Failed!", error);
+      } else {
+        console.log("Authenticated successfully with payload:", authData);
+        // save the user's profile into the database so we can list users,
+        // use them in Security and Firebase Rules, and show profiles
+        ref.child("users").child(authData.uid).set({
+          provider: authData.provider,
+          name: authData.google.displayName
+        });
+        uid = authData.uid;
+        onAuth(authData);
+      }
+    });
+  }
 }
 
 function onAuth(authData) {
   document.getElementById("userName").innerHTML = authData.google.displayName;
+  document.getElementById("preMain").style.display = "none";
   document.getElementById("mainContent").style.display = "block";
 
   var userRef = new Firebase(basePath + "/userData/" + authData.uid + "/");
