@@ -100,11 +100,13 @@ function tagURL(URL, resultsCallback) {
 			);
 		}
 	);
+
+	clarifai.formatOptions().then(function (stuff) {console.log("hi " + stuff)});
 }
 
 function tagLocalImage(image, resultsCallback) {
-	var imgur = Imgur.init();
-	imgur.upload(file);
+	console.log("alled");
+	console.log(Imgur.upload(image));
 
 }
 

@@ -30,39 +30,6 @@ var Imgur = (function (d) {
                 els.removeChild(els.lastChild);
             }
         },
-        bindEvent: function () {
-            var fileinput = d.querySelector('#uploadBtn'),
-                fileName  = d.querySelector('#uploadFile'),
-                status    = d.querySelector('.status'),
-                self      = this;
-
-            fileinput.addEventListener('change', function (e) {
-                var files = e.target.files, file, p, t, i, len;
-                for (i = 0, len = files.length; i < len; i += 1) {
-                    file = files[i];
-                    if (file.type.match(/image.*/)) {
-                        self.remove(status);
-                        fileName.value = this.value;
-
-                        p = self.create('p');
-                        t = d.createTextNode("Uploading...");
-
-                        p.appendChild(t);
-                        status.appendChild(p);
-
-                        self.upload(file);
-                    } else {
-                        self.remove(status);
-
-                        p = self.create('p');
-                        t = d.createTextNode("Invalid Archive");
-
-                        p.appendChild(t);
-                        status.appendChild(p);
-                    }
-                }
-            }, false);
-        },
         upload: function (file, callback) {
             var xhttp    = module.xhr(),
                 status   = d.querySelector('.status'),
@@ -94,13 +61,10 @@ var Imgur = (function (d) {
                 }
             };
             xhttp.send(fd);
-        },
-        init: function () {
-            module.bindEvent();
         }
     };
 
     return {
-        init: module.init
+        upload: module.upload
     };
 }(document));
