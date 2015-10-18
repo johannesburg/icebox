@@ -1,6 +1,10 @@
 var ref;
 var basePath = "https://boiling-inferno-5486.firebaseio.com/";
 var uid;
+
+var imgurClientID = "a7bc24269b5f209";
+var imgurSecret = "5d5507dd629d18759ff61af04148513997cce638";
+
 var $ = function(tag) {return document.getElementById(tag);};
 
 function start() {
@@ -98,13 +102,22 @@ function fileSelected(e) {
   }
   console.log("Uploading file");
   var file = document.getElementById('fileToUpload').files[0];
-  // Usage
+  // Create our HTTP request
+   var http = new XMLHttpRequest();
+   http.onload = function() {
+      console.log(http.responseText);
+    }
+   http.open("POST", "https://api.imgur.com/3/upload");
+   http.setRequestHeader('Authorization', 'Client-ID ' + imgurClientID);
+
+   // Append image data to formdata object
+   var fd = new FormData();
+   fd.append("image", file);
+   http.send(fd);
+  /*
   getDataUri(URL.createObjectURL(file), function(dataUri) {
-    /*
-     var imageRef = new Firebase(basePath + "/imageLoading/");
-     imageRef.set(dataUri);*/
-     tagLocalImage(dataUri, null, null);
-  });
+
+  });*/
 }
 
 function getDataUri(url, callback) {
@@ -118,7 +131,8 @@ function getDataUri(url, callback) {
         canvas.getContext('2d').drawImage(this, 0, 0);
 
         // Get raw image data
-        callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
+        callback(canvas.toDataURL('image/png'));
+        //.replace(/^data:image\/(png|jpg);base64,/, '')
     };
 
     image.src = url;
@@ -132,6 +146,16 @@ function addNewItem(name) {
   var text = document.createTextNode(name);
   data.appendChild(text);
   row.appendChild(data);
+
+  var input = document.createElement("td");
+  input.innerHTML = "<input type=\"text\" value=\"0\">";
+
+  var deleteButton = document.createElement("td");
+  var deleteIcon = document.createElement("i");
+  deleteIcon.className = "fa fa-times fa-2x";
+  deleteButton.appendChild(deleteIcon);
+  row.appendChild(deleteButton);
+
 
   var parent = document.getElementById("itemTable");
   parent.appendChild(row);
