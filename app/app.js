@@ -33,6 +33,10 @@ app.use(function(req, res, next) {
   next(err);
 });
 
+app.get('/users/', function(req, res){
+  res.send('Something happened!');
+});
+
 // error handlers
 
 // development error handler
