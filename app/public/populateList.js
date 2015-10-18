@@ -106,7 +106,7 @@ function fileSelected(e) {
    var http = new XMLHttpRequest();
    http.onload = function() {
       document.getElementById("loadingIcon").style.display = "none";
-      var response = JSON.parse(http.responseText));
+      var response = JSON.parse(http.responseText);
       var url = "www.imgur.com/" + response.id;
       tagURL(url, onTags);
     }

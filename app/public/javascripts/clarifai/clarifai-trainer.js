@@ -58,11 +58,20 @@ Array.prototype.diff = function(a) {
 //@param originalTags array containing all original tags sent to user
 //@param addedTags new tags added by user
 //@param selectedTags tags selected by user
-function giveFeedback(docids, originalTags, addedTags, selectedTags) {
-  var removeTags = originalTags.diff(selectedTags);
-  Clarifai.feedbackAddTagsToDocids(docids, addTags, null,null);
-  Clarifai.feedbackRemoveTagsFromDocids(docids, removeTags, null, null);
-  //TODO: add correctTags to whitelist
+function giveFeedback(URL, goodTags, badTags) {
+    //Clarifai.feedbackAddTagsToDocids(docids, addTags, null,null);
+    //Clarifai.feedbackRemoveTagsFromDocids(docids, removeTags, null, null);
+    //TODO: add correctTags to whitelist
+
+    goodTags.forEach(function (tag) {
+        clarifai.positive(URL, tag);
+    });
+
+    badTags.forEach(function (tag) {
+        clarifai.negative(URL, tag);
+    });
+
+    clarifai.train(URL);
 }
 
 //exampleTagSingleURL(docids, ourids);
