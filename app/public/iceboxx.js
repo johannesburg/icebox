@@ -14,7 +14,8 @@ var $ = function(tag) {return document.getElementById(tag);};
 function start() {
   ref = new Firebase(basePath);
   document.getElementById("loginButton").onclick = function (e) {
-    ref.authWithOAuthPopup("google", function(error, authData) {
+    console.log("Hello dolly");
+    ref.authWithOAuthRedirect("google", function(error, authData) {
       if (error) {
         console.log("Login Failed!", error);
       } else {
@@ -162,6 +163,7 @@ function cameraClick(e) {
 function fileSelected(e) {
   console.log("Loading files");
   var spinner = document.getElementById("updateDBSpinner");
+  document.getElementById("addItemAlert").style.display = "none";
   spinner.style.display = "inline-block";
   document.getElementById("loadingIcon").style.display = "block";
   var count = document.getElementById('fileToUpload').files.length;
@@ -179,14 +181,12 @@ function fileSelected(e) {
   document.getElementById("imageInput").style.display = "none";
   document.getElementById("imageOutputDiv").style.display = "block";
   var img = document.createElement("img");
-  img.width = "200";
-  img.height = "200";
+  img.className = "image-preview";
   showImage(file, img);
   document.getElementById("imageOutput").appendChild(img);
   // Create our HTTP request
    var http = new XMLHttpRequest();
    http.onload = function() {
-      document.getElementById("loadingIcon").style.display = "none";
       var response = JSON.parse(http.responseText);
       console.log(http.responseText);
       var url = "http://www.i.imgur.com/" + response.data.id + ".jpg";
@@ -215,11 +215,15 @@ function onTags(success, url, tags) {
     lastURL = url;
     document.getElementById("updateDBSpinner").style.display = "none";
     document.getElementById("tagListDiv").style.display = "block";
+    document.getElementById("addItemAlert").style.display = "none";
+    document.getElementById("selectTagsAlert").style.display = "block";
+    document.getElementById("loadingIcon").style.display = "none";
     showTags(tags);
   }
 }
 
-function submitTags() {
+function submitTags(e) {
+  e.preventDefault();
   var i;
   console.log(tagSelect);
   for (i = 0; i < tagSelect.length; i++) {
@@ -228,9 +232,12 @@ function submitTags() {
   var tagContainer = document.getElementById("tagList");
   tagContainer.innerHTML = "";
   giveFeedback(lastURL, tagSelect, tagIgnore);
+
+  console.log(tagSelect);
+  console.log(tagIgnore);
+  console.log(lastURL);
   // Clear old info
-  console.println("Good: " + tagSelect.toString());
-  console.println("Bad: " + tagIgnore.toString());
+
   lastURL = "";
   tagSelect = [];
   tagIgnore = [];
@@ -239,6 +246,9 @@ function submitTags() {
   document.getElementById("imageOutputDiv").style.display = "none";
   document.getElementById("tagListDiv").style.display = "none";
   document.getElementById("imageOutput").innerHTML = "";
+  document.getElementById("addItemAlert").style.display = "block";
+  document.getElementById("selectTagsAlert").style.display = "none";
+  return false;
 }
 
 function addNewItem(accessRef) {
