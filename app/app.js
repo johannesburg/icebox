@@ -7,13 +7,18 @@ var bodyParser = require('body-parser');
 var config = require('./config')();
 var Firebase = require("firebase");
 
+var clarifai = require("./clarifai/clarifai-tags.js");
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var myFirebaseRef = new Firebase("https://boiling-inferno-5486.firebaseio.com/");
-process.env['CLARIFAI_CLIENT_ID'] = '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP';
-process.env['CLARIFAI_CLIENT_SECRET'] = 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigIW';
+myFirebaseRef.child("imageLoading").on("child_added", function(snapshot) {
+  var userUpload = snapshot.val();
+  
+});
 
+function 
 
 var app = express();
 
@@ -34,10 +39,6 @@ app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
-});
-
-app.get('/users/', function(req, res){
-  res.send('Something happened!');
 });
 
 // error handlers
