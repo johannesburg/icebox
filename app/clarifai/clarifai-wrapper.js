@@ -4,3 +4,4 @@ process.env['CLARIFAI_CLIENT_SECRET'] = 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigI
 var Clarifai = require('./clarifai_node.js');
 
 Clarifai.initAPI(process.env.CLIENT_ID, process.env.CLIENT_SECRET);
+
