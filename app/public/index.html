@@ -127,6 +127,7 @@
   <form class="bs-component">
                 <div class="form-group">
                   <label class="control-label" for="itemInput">Focused input</label>
+
                   <input class="form-control" id="itemInput" type="text" value="Input" />
                 </div>
    </form>
@@ -139,7 +140,15 @@
             	<h1 id="tables">Tables</h1>
             </div>
             <div class="bs-component">
-            	<table class="table table-responsive table-hover" id="itemTable"></table>
+            	<table class="table table-striped table-hover">
+                	<thead>
+                    	<tr>
+                    		<th>Name</th>
+                   			<th>Days 'til expiration</th>
+                  		</tr>
+                    </thead>
+                    <tbody id="itemTable"></tbody>
+                </table>
             </div>
           </div>
       </div>
