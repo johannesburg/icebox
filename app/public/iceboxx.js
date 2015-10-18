@@ -126,7 +126,10 @@ function fileSelected(e) {
   document.getElementById("imageInput").style.display = "none";
   document.getElementById("imageOutputDiv").style.display = "block";
   var img = document.createElement("img");
+  img.width = "200";
+  img.height = "200";
   showImage(file, img);
+  document.getElementById("imageOutput").appendChild(img);
   // Create our HTTP request
    var http = new XMLHttpRequest();
    http.onload = function() {
@@ -135,7 +138,7 @@ function fileSelected(e) {
       console.log(http.responseText);
       var url = "http://www.i.imgur.com/" + response.data.id + ".jpg";
       console.log(url);
-      //tagURL(url, onTags);
+      tagURL(url, onTags);
     }
    http.open("POST", "https://api.imgur.com/3/upload");
    http.setRequestHeader('Authorization', 'Client-ID ' + imgurClientID);
@@ -160,20 +163,27 @@ function onTags(success, url, tags) {
   }
 }
 
+function submitTags() {
+
+}
+
 function addNewItem(accessRef) {
   var count = accessRef.child("itemCount").val();
   var name = accessRef.child("itemName").val();
   var row = document.createElement("tr");
   row.id = name;
   var data = document.createElement("td");
+  data.className = "col-sm-5";
 
   var text = document.createTextNode(name);
   data.appendChild(text);
   row.appendChild(data);
 
   var input = document.createElement("td");
+  input.className = "col-sm-2";
   var inputField = document.createElement("input");
   inputField.type = "number";
+  inputField.style = "max-width: 50px";
   inputField.value = count;
   inputField.min = 1;
   inputField.className = "text-center";
@@ -184,6 +194,7 @@ function addNewItem(accessRef) {
   row.appendChild(input);
 
   var deleteButton = document.createElement("td");
+  deleteButton.className = "col-sm-5";
   var deleteIcon = document.createElement("i");
   deleteIcon.onclick = function(e) {
     var row = document.getElementById(name);
