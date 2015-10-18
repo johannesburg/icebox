@@ -13,7 +13,7 @@ var clarifai = new Clarifai({id: '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP', sec
 
 function filterTags(tags, resultsCallback) {
 	// Get a database reference to our posts
-	var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0vIUgQU9x1RDgQHEE_");
+	var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0vUW8ifj42bB3hUETz");
 
 	tags.sort();
 
