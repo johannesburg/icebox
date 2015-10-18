@@ -3,6 +3,8 @@ process.env['CLARIFAI_CLIENT_SECRET'] = 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigI
 
 var Clarifai = require('./clarifai-node.js');
 
+var Firebase = require("firebase");
+
 Clarifai.initAPI(process.env.CLARIFAI_CLIENT_ID, process.env.CLARIFAI_CLIENT_SECRET);
 
 // Setting a throttle handler lets you know when the service is unavailable because of throttling. It will let
@@ -14,10 +16,31 @@ Clarifai.setThrottleHandler( function( bThrottled, waitSeconds ) {
 	console.log( bThrottled ? ["throttled. service available again in",waitSeconds,"seconds"].join(' ') : "not throttled");
 });
 
-function filterTags(tags) {
-	var filteredTags = tags;
-	//filter tags
-	return filteredTags;
+function filterTags(localID, docID, tags, resultsCallback) {
+	// Get a database reference to our posts
+	var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0uat1GgNnspmkDgNwP");
+
+	tags.sort();
+
+	// Attach an asynchronous callback to read the data at our posts reference
+	firebase.once("value",
+	function (foodWordsWhitelist) {
+		var whitelist = foodWordsWhitelist.val();
+		var filteredTags = new Array();
+
+		while( tags.length > 0 && whitelist.length > 0 )
+		{   
+		    if (tags[0] < whitelist[0])
+		    	tags.shift();
+		    else if (tags[0] > whitelist[0])
+		    	whitelist.shift();
+		    else {
+			    filteredTags.push(tags.shift());
+			    whitelist.shift();
+		    }
+		}
+		resultsCallback(true, localID, docID, filteredTags);
+	});
 }
 
 function commonResultHandler(err, res, resultsCallback) {
@@ -55,10 +78,10 @@ function commonResultHandler(err, res, resultsCallback) {
 			// the request completed successfully
 			for( i = 0; i < res.results.length; i++ ) {
 				if( res["results"][i]["status_code"] === "OK" ) {
-					resultsCallback(true,
-						res.results[i].local_id,
+					filterTags(res.results[i].local_id,
 						res.results[i].docid,
-						filterTags(res["results"][i].result["tag"]["classes"]))
+						res["results"][i].result["tag"]["classes"],
+						resultsCallback);
 				}
 				else {
 					resultsCallback(false,
