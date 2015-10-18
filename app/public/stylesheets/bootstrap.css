@@ -4215,6 +4215,20 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
+
+.invisble-button {
+  background: transparent;
+  color: transparent;
+  border: none !important;
+  font-size:0;
+}
+
+.input-margin {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.bottom-buffer { margin-bottom:30px; }
 .navbar {
   position: relative;
   min-height: 40px;
@@ -4226,6 +4240,24 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     border-radius: 0;
   }
 }
+
+.vertical-align {
+  display: flex;
+  flex-direction: row;
+}
+
+.img-responsive {
+  margin: 0 auto;
+}
+
+.vertical-align > [class^="col-"],
+.vertical-align > [class*=" col-"] {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Optional, to align inner items 
+                              horizontally inside the column */
+}
+
 @media (min-width: 768px) {
   .navbar-header {
     float: left;
