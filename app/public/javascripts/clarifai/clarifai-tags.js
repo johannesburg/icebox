@@ -1,20 +1,24 @@
 process.env['CLARIFAI_CLIENT_ID'] = '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP';
 process.env['CLARIFAI_CLIENT_SECRET'] = 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigIW';
 
-var Clarifai = require('./clarifai-node.js');
+var Clarifai = require('./clarifai-basic.js');
 
 var Firebase = require("firebase");
 
-Clarifai.initAPI(process.env.CLARIFAI_CLIENT_ID, process.env.CLARIFAI_CLIENT_SECRET);
+var Imgur = require('./imgut.js');
+
+var clarifai = new Clarifai({id: process.env.CLARIFAI_CLIENT_ID, secret: process.env.CLARIFAI_CLIENT_SECRET});
+
+//Clarifai.initAPI(process.env.CLARIFAI_CLIENT_ID, process.env.CLARIFAI_CLIENT_SECRET);
 
 // Setting a throttle handler lets you know when the service is unavailable because of throttling. It will let
 // you know when the service is available again. Note that setting the throttle handler causes a timeout handler to
 // be set that will prevent your process from existing normally until the timeout expires. If you want to exit fast
 // on being throttled, don't set a handler and look for error results instead.
 
-Clarifai.setThrottleHandler( function( bThrottled, waitSeconds ) { 
-	console.log( bThrottled ? ["throttled. service available again in",waitSeconds,"seconds"].join(' ') : "not throttled");
-});
+//Clarifai.setThrottleHandler( function( bThrottled, waitSeconds ) { 
+//	console.log( bThrottled ? ["throttled. service available again in",waitSeconds,"seconds"].join(' ') : "not throttled");
+//});
 
 function filterTags(localID, docID, tags, resultsCallback) {
 	// Get a database reference to our posts
@@ -98,23 +102,31 @@ function commonResultHandler(err, res, resultsCallback) {
 // Takes a url for a picture and a local ID for the url.
 // Calls resultsCallback which should be a function which takes a boolean representing success, a local id string, a doc id, and an array of tags
 function tagURL(URL, localId, resultCallback) {
-	Clarifai.tagURL( URL , localId, function (errors, results) {commonResultHandler(errors, results, resultCallback)}); 
+	//Clarifai.tagURL( URL , localId, function (errors, results) {commonResultHandler(errors, results, resultCallback)}); 
 }
 
 // Takes an array of urls for pictures and an array of local IDs for each url.
 // Calls resultsCallback multiple times. It should be a function which takes a boolean representing success, a local id string, a doc id, and an array of tags
 function tagURLs(URLs, localIds, resultsCallback) {
-	Clarifai.tagURL( URLs , localIds, function (errors, results) {commonResultHandler(errors, results, resultsCallback)}); 
+	//Clarifai.tagURL( URLs , localIds, function (errors, results) {commonResultHandler(errors, results, resultsCallback)}); 
 }
 
-tagURL("http://www.travelingwellforless.com/wp-content/uploads/2016/01/groceries.jpg",
-	"canadian groceries", 
-	function (success, localId, docId, tags) {
-		if (!success)
-			console.log("error: " + localId);
-		else {
-			console.log(localId);
-			console.log(tags);
-		}});
+function tagLocalImage(image, localId, resultsCallback) {
+	var imgur = Imgur.init();
+	imgur.upload(file);
+
+}
+
+// tagURL("http://www.travelingwellforless.com/wp-content/uploads/2016/01/groceries.jpg",
+// 	"canadian groceries", 
+// 	function (success, localId, docId, tags) {
+// 		if (!success)
+// 			console.log("error: " + localId);
+// 		else {
+// 			console.log(localId);
+// 			console.log(tags);
+// 		}});
+
+
 
 Clarifai.clearThrottleHandler();
