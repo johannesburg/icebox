@@ -1,4 +1,5 @@
 var ref;
+var userRef;
 var basePath = "https://boiling-inferno-5486.firebaseio.com/";
 var uid;
 
@@ -39,14 +40,13 @@ function onAuth(authData) {
   document.getElementById("preMain").style.display = "none";
   document.getElementById("mainContent").style.display = "block";
 
-  var userRef = new Firebase(basePath + "/userData/" + authData.uid + "/");
+  userRef = new Firebase(basePath + "/userData/" + authData.uid + "/");
 
   var input = document.getElementById("itemInput");
   input.onkeypress = function (e) {
     if (e.keyCode == 13) {
       e.preventDefault();
       var name = input.value;
-      userRef.push({"itemName": name});
       return false;
     }
   };
@@ -106,7 +106,7 @@ function fileSelected(e) {
       document.getElementById("loadingIcon").style.display = "none";
       var response = JSON.parse(http.responseText);
       console.log(http.responseText);
-      var url = "www.imgur.com/" + response.data.id;
+      var url = "http://www.i.imgur.com/" + response.data.id + ".jpg";
       console.log(url);
       tagURL(url, onTags);
     }
@@ -121,7 +121,7 @@ function fileSelected(e) {
 
 function onTags(success, url, tags) {
   if (success) {
-    console.print(tags);
+    console.log(tags);
     showTags(tags);
   }
 }
@@ -136,7 +136,15 @@ function addNewItem(name) {
   row.appendChild(data);
 
   var input = document.createElement("td");
-  input.innerHTML = "<input type=\"text\" value=\"0\" />";
+  var inputField = document.createElement("input");
+  inputField.type = "number";
+  inputField.value = 1;
+  inputField.min = 1;
+  inputField.className = "text-center";
+  input.appendChild(inputField);
+  input.onchange = function(e) {
+    userRef.set({name : input.value});
+  }
   row.appendChild(input);
 
   var deleteButton = document.createElement("td");
