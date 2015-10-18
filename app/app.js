@@ -14,8 +14,10 @@ var users = require('./routes/users');
 
 var myFirebaseRef = new Firebase("https://boiling-inferno-5486.firebaseio.com/");
 myFirebaseRef.child("imageLoading").on("child_added", function(snapshot) {
-  var userUpload = snapshot.val();
-  
+  var userUpload = snapshot.val(); //img url
+  clarifai.tagUrl(userUpload.toString, null, function(req, res, next) {
+
+  });
 });
 
 function 
