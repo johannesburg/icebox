@@ -1,19 +1,32 @@
-function start() {
-  var myDataRef = new Firebase("https://boiling-inferno-5486.firebaseio.com/");
-  // When we press enter
-  
-  var input = document.getElementById("itemInput");
+var ref;
 
+function start() {
+  ref = new Firebase("https://boiling-inferno-5486.firebaseio.com/");
+
+  ref.authWithOAuthPopup("google", function(error, authData) {
+    if (error) {
+      console.log("Login Failed!", error);
+    } else {
+      console.log("Authenticated successfully with payload:", authData);
+      onAuth(authData);
+    }
+  });
+}
+
+function onAuth(authData) {
+  document.getElementById("mainContent").style.display = "block";
+
+  var input = $("itemInput");
   input.onkeypress = function (e) {
     if (e.keyCode == 13) {
       var name = input.value;
-      myDataRef.push({"itemName": name});
+      ref.push({"itemName": name});
       e.preventDefault();
       return false;
     }
   };
   
-  myDataRef.on('child_added', function(snapshot) {
+  ref.on('child_added', function(snapshot) {
      var newItem = snapshot.val();
      addNewItem(newItem.itemName);
   });
