@@ -197,20 +197,24 @@
 	}
 </script>
   
-  <form id="form1" enctype="multipart/form-data" method="post" action="Upload.aspx">
-    <div>
-      <label for="fileToUpload">Take or select photo(s)</label><br />
-      <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" accept="image/*" capture="camera" />
+  <div class="form-group">
+  	<div class="col-lg-10 col-lg-offset-2">
+  		<form id="form1" enctype="multipart/form-data" method="post" action="Upload.aspx">
+    	<div>
+    	  <label for="fileToUpload">Take or select photo(s)</label><br />
+          <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" accept="image/*" capture="camera" />
+    	</div>
+        
+    	<div id="details"></div>
+    	<div>
+      		<input type="button" onclick="uploadFile()" value="Upload" />
+    	</div>
+ 
+    	<div id="progress"></div>
+        </form>
     </div>
- 
-    <div id="details"></div>
-    <div>
-      <input type="button" onclick="uploadFile()" value="Upload" />
-    </div>
- 
-    <div id="progress"></div>
- 
-  </form>
+ </div>
+  
 
 
 
