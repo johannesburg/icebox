@@ -31,6 +31,10 @@ function start() {
 }
 
 function onAuth(authData) {
+  if (uid != null && authData == null) {
+    uid = null;
+    location.reload();
+  }
   document.getElementById("userName").innerHTML = authData.google.displayName;
   var firstname = authData.google.displayName.split(" ")[0];
   var suffix = "'s";
@@ -56,6 +60,10 @@ function onAuth(authData) {
   submitButton.onclick = function (e) {
     var name = input.value;
     userRef.push({"itemName": name, "itemCount": 1});
+  }
+
+  document.getElementById("logout").onclick = function (e) {
+    ref.unauth();
   }
   
   userRef.on('child_added', function(snapshot) {
@@ -115,7 +123,10 @@ function fileSelected(e) {
   }
   console.log("Uploading file");
   var file = document.getElementById('fileToUpload').files[0];
-
+  document.getElementById("imageInput").style.display = "none";
+  document.getElementById("imageOutputDiv").style.display = "block";
+  var img = document.createElement("img");
+  showImage(file, img);
   // Create our HTTP request
    var http = new XMLHttpRequest();
    http.onload = function() {
@@ -124,7 +135,7 @@ function fileSelected(e) {
       console.log(http.responseText);
       var url = "http://www.i.imgur.com/" + response.data.id + ".jpg";
       console.log(url);
-      tagURL(url, onTags);
+      //tagURL(url, onTags);
     }
    http.open("POST", "https://api.imgur.com/3/upload");
    http.setRequestHeader('Authorization', 'Client-ID ' + imgurClientID);
@@ -133,6 +144,14 @@ function fileSelected(e) {
    var fd = new FormData();
    fd.append("image", file);
    http.send(fd);
+}
+
+function showImage(file,target) {
+  var fr=new FileReader();
+  // when image is loaded, set the src of the image where you want to display it
+  fr.onload = function(e) { target.src = this.result; };
+  // fill fr with image data    
+  fr.readAsDataURL(file);
 }
 
 function onTags(success, url, tags) {
