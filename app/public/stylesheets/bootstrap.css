@@ -4140,6 +4140,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .button-padding {
   margin-left: 4px;
   margin-right: 4px;
+  margin-top: 8px;
 }
 .nav-pills > li {
   float: left;

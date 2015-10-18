@@ -1,6 +1,10 @@
 var ref;
 var basePath = "https://boiling-inferno-5486.firebaseio.com/";
 var uid;
+
+var imgurClientID = "a7bc24269b5f209";
+var imgurSecret = "5d5507dd629d18759ff61af04148513997cce638";
+
 var $ = function(tag) {return document.getElementById(tag);};
 
 function start() {
@@ -85,7 +89,6 @@ function cameraClick(e) {
 function fileSelected(e) {
   console.log("Loading files")
   document.getElementById("loadingIcon").style.display = "block";
-  document.getElementById("loadingIcon").style.display = "block";
   var count = document.getElementById('fileToUpload').files.length;
   for (var index = 0; index < count; index ++) {
     var file = document.getElementById('fileToUpload').files[index];
@@ -98,32 +101,27 @@ function fileSelected(e) {
   }
   console.log("Uploading file");
   var file = document.getElementById('fileToUpload').files[0];
-  // Usage
-  getDataUri(URL.createObjectURL(file), function(dataUri) {
-    /*
-     var imageRef = new Firebase(basePath + "/imageLoading/");
-     imageRef.set(dataUri);*/
-     tagLocalImage(dataUri, null, null);
-  });
+
+  // Create our HTTP request
+   var http = new XMLHttpRequest();
+   http.onload = function() {
+      document.getElementById("loadingIcon").style.display = "none";
+      var response = JSON.parse(http.responseText));
+      var url = "www.imgur.com/" + response.id;
+      tagURL(url, onTags);
+    }
+   http.open("POST", "https://api.imgur.com/3/upload");
+   http.setRequestHeader('Authorization', 'Client-ID ' + imgurClientID);
+
+   // Append image data to formdata object
+   var fd = new FormData();
+   fd.append("image", file);
+   http.send(fd);
 }
 
-function getDataUri(url, callback) {
-    var image = new Image();
-
-    image.onload = function () {
-        var canvas = document.createElement('canvas');
-        canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
-        canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
-
-        canvas.getContext('2d').drawImage(this, 0, 0);
-
-        // Get raw image data
-        callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
-    };
-
-    image.src = url;
+function onTags(success, url, tags) {
+  console.print(tags);
 }
-
 
 function addNewItem(name) {
   var row = document.createElement("tr");
@@ -132,6 +130,16 @@ function addNewItem(name) {
   var text = document.createTextNode(name);
   data.appendChild(text);
   row.appendChild(data);
+
+  var input = document.createElement("td");
+  input.innerHTML = "<input type=\"text\" value=\"0\">";
+
+  var deleteButton = document.createElement("td");
+  var deleteIcon = document.createElement("i");
+  deleteIcon.className = "fa fa-times fa-2x";
+  deleteButton.appendChild(deleteIcon);
+  row.appendChild(deleteButton);
+
 
   var parent = document.getElementById("itemTable");
   parent.appendChild(row);
