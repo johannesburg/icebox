@@ -1,16 +1,10 @@
+// Initalize the clarifai API
 var clarifai = new Clarifai({id: '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP', secret: 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigIW'});
 
-//Clarifai.initAPI(process.env.CLARIFAI_CLIENT_ID, process.env.CLARIFAI_CLIENT_SECRET);
-
-// Setting a throttle handler lets you know when the service is unavailable because of throttling. It will let
-// you know when the service is available again. Note that setting the throttle handler causes a timeout handler to
-// be set that will prevent your process from existing normally until the timeout expires. If you want to exit fast
-// on being throttled, don't set a handler and look for error results instead.
-
-//Clarifai.setThrottleHandler( function( bThrottled, waitSeconds ) { 
-//	console.log( bThrottled ? ["throttled. service available again in",waitSeconds,"seconds"].join(' ') : "not throttled");
-//});
-
+// Takes a URL represented by a string, an array of tags, and a callback which takes a boolean,
+// URL represented by a string, and an array of tags. Filters the array of tags before passing
+// them through to the callback. The boolean in the callback will be true on sucess and false
+// on failure.
 function filterTags(URL, tags, resultsCallback) {
 	console.log("filterTags called");
 
