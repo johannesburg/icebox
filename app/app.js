@@ -14,8 +14,14 @@ var users = require('./routes/users');
 
 var myFirebaseRef = new Firebase("https://boiling-inferno-5486.firebaseio.com/");
 myFirebaseRef.child("imageLoading").on("child_added", function(snapshot) {
-  var userUpload = snapshot.val();
-  
+    var userUpload = snapshot.val(); //img url
+    var path = "https://boiling-inferno-5486.firebaseio.com/imageLoading/" + userUpload.key();
+    clarifai.tagUrl(path, null, function(success, localId, docId, tags) {
+      if (success) {
+        //tags = filterTags(tags);
+        console.log("Success! " + tags);
+      }; 
+  });
 });
 
 function 
