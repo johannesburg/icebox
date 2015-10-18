@@ -4178,6 +4178,12 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   top: auto;
   left: auto;
 }
+
+.image-preview {
+  width: 200px;
+  height: auto;
+}
+
 @media (min-width: 768px) {
   .nav-justified > li {
     display: table-cell;
