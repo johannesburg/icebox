@@ -267,7 +267,7 @@ var Clarifai =
       this.setAuth(args.auth);
     }
 
-    this.maxAttempts = args.maxAttempts || 3;
+    this.maxAttempts = args.maxAttempts || 1;
     this.backoffTime = args.backoffTime || 200;
 
     var _this = this;
@@ -317,7 +317,7 @@ var Clarifai =
     var _this = this;
     return this.performRequest(requestObj).then(this.verifyResponse.bind(this)) // verify response might turn it into an error
     ['catch'](function (error) {
-      if (maxAttempts < numAttempts) {
+      if (maxAttempts <= numAttempts) {
         return _Promise.reject(error);
       }
 
@@ -428,7 +428,8 @@ var Clarifai =
       conceptPredict: "concepts/<namespace>/<cname>/predict",
       conceptExamples: "concepts/<namespace>/<cname>/examples",
       model: "models/<modelId>",
-      models: "models"
+      models: "models",
+      tag: "tag"
     }
   });
 
@@ -1050,7 +1051,7 @@ var Clarifai =
 
       //// try to create collection
       this.clarifai.collections.create({ id: this.collectionId })['catch'](function (e) {
-        return console.log('collection already exists, no need to create it again');
+        return undefined;
       });
     }
 
@@ -1140,6 +1141,17 @@ var Clarifai =
             }]
           }]
         };
+      }
+    }, {
+      key: 'tag',
+      value: function tag(url) {
+        return this.clarifai.requestHandler.request({
+          url: 'https://api.clarifai.com/v1/tag',
+          method: 'POST',
+          body: {
+            url: url
+          }
+        });
       }
     }]);
 
@@ -3065,51 +3077,66 @@ var Clarifai =
         primary way of interacting with a promise is through its `then` method, which
         registers callbacks to receive either a promise's eventual value or the reason
         why the promise cannot be fulfilled.
+
         Terminology
         -----------
+
         - `promise` is an object or function with a `then` method whose behavior conforms to this specification.
         - `thenable` is an object or function that defines a `then` method.
         - `value` is any legal JavaScript value (including undefined, a thenable, or a promise).
         - `exception` is a value that is thrown using the throw statement.
         - `reason` is a value that indicates why a promise was rejected.
         - `settled` the final resting state of a promise, fulfilled or rejected.
+
         A promise can be in one of three states: pending, fulfilled, or rejected.
+
         Promises that are fulfilled have a fulfillment value and are in the fulfilled
         state.  Promises that are rejected have a rejection reason and are in the
         rejected state.  A fulfillment value is never a thenable.
+
         Promises can also be said to *resolve* a value.  If this value is also a
         promise, then the original promise's settled state will match the value's
         settled state.  So a promise that *resolves* a promise that rejects will
         itself reject, and a promise that *resolves* a promise that fulfills will
         itself fulfill.
+
+
         Basic Usage:
         ------------
+
         ```js
         var promise = new Promise(function(resolve, reject) {
           // on success
           resolve(value);
+
           // on failure
           reject(reason);
         });
+
         promise.then(function(value) {
           // on fulfillment
         }, function(reason) {
           // on rejection
         });
         ```
+
         Advanced Usage:
         ---------------
+
         Promises shine when abstracting away asynchronous interactions such as
         `XMLHttpRequest`s.
+
         ```js
         function getJSON(url) {
           return new Promise(function(resolve, reject){
             var xhr = new XMLHttpRequest();
+
             xhr.open('GET', url);
             xhr.onreadystatechange = handler;
             xhr.responseType = 'json';
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.send();
+
             function handler() {
               if (this.readyState === this.DONE) {
                 if (this.status === 200) {
@@ -3121,13 +3148,16 @@ var Clarifai =
             };
           });
         }
+
         getJSON('/posts.json').then(function(json) {
           // on fulfillment
         }, function(reason) {
           // on rejection
         });
         ```
+
         Unlike callbacks, promises are great composable primitives.
+
         ```js
         Promise.all([
           getJSON('/posts'),
@@ -3135,9 +3165,11 @@ var Clarifai =
         ]).then(function(values){
           values[0] // => postsJSON
           values[1] // => commentsJSON
+
           return values;
         });
         ```
+
         @class Promise
         @param {function} resolver
         Useful for tooling.
@@ -3177,6 +3209,7 @@ var Clarifai =
         The primary way of interacting with a promise is through its `then` method,
         which registers callbacks to receive either a promise's eventual value or the
         reason why the promise cannot be fulfilled.
+
         ```js
         findUser().then(function(user){
           // user is available
@@ -3184,11 +3217,14 @@ var Clarifai =
           // user is unavailable, and you are given the reason why
         });
         ```
+
         Chaining
         --------
+
         The return value of `then` is itself a promise.  This second, 'downstream'
         promise is resolved with the return value of the first promise's fulfillment
         or rejection handler, or rejected if the handler throws an exception.
+
         ```js
         findUser().then(function (user) {
           return user.name;
@@ -3198,6 +3234,7 @@ var Clarifai =
           // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
           // will be `'default name'`
         });
+
         findUser().then(function (user) {
           throw new Error('Found user, but still unhappy');
         }, function (reason) {
@@ -3210,6 +3247,7 @@ var Clarifai =
         });
         ```
         If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
+
         ```js
         findUser().then(function (user) {
           throw new PedagogicalException('Upstream error');
@@ -3221,12 +3259,15 @@ var Clarifai =
           // The `PedgagocialException` is propagated all the way down to here
         });
         ```
+
         Assimilation
         ------------
+
         Sometimes the value you want to propagate to a downstream promise can only be
         retrieved asynchronously. This can be achieved by returning a promise in the
         fulfillment or rejection handler. The downstream promise will then be pending
         until the returned promise is settled. This is called *assimilation*.
+
         ```js
         findUser().then(function (user) {
           return findCommentsByAuthor(user);
@@ -3234,7 +3275,9 @@ var Clarifai =
           // The user's comments are now available
         });
         ```
+
         If the assimliated promise rejects, then the downstream promise will also reject.
+
         ```js
         findUser().then(function (user) {
           return findCommentsByAuthor(user);
@@ -3244,11 +3287,15 @@ var Clarifai =
           // If `findCommentsByAuthor` rejects, we'll have the reason here
         });
         ```
+
         Simple Example
         --------------
+
         Synchronous Example
+
         ```javascript
         var result;
+
         try {
           result = findResult();
           // success
@@ -3256,7 +3303,9 @@ var Clarifai =
           // failure
         }
         ```
+
         Errback Example
+
         ```js
         findResult(function(result, err){
           if (err) {
@@ -3266,7 +3315,9 @@ var Clarifai =
           }
         });
         ```
+
         Promise Example;
+
         ```javascript
         findResult().then(function(result){
           // success
@@ -3274,11 +3325,15 @@ var Clarifai =
           // failure
         });
         ```
+
         Advanced Example
         --------------
+
         Synchronous Example
+
         ```javascript
         var author, books;
+
         try {
           author = findAuthor();
           books  = findBooksByAuthor(author);
@@ -3287,12 +3342,19 @@ var Clarifai =
           // failure
         }
         ```
+
         Errback Example
+
         ```js
+
         function foundBooks(books) {
+
         }
+
         function failure(reason) {
+
         }
+
         findAuthor(function(author, err){
           if (err) {
             failure(err);
@@ -3317,7 +3379,9 @@ var Clarifai =
           }
         });
         ```
+
         Promise Example;
+
         ```javascript
         findAuthor().
           then(findBooksByAuthor).
@@ -3327,6 +3391,7 @@ var Clarifai =
           // something went wrong
         });
         ```
+
         @method then
         @param {Function} onFulfilled
         @param {Function} onRejected
@@ -3359,21 +3424,25 @@ var Clarifai =
       /**
         `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
         as the catch block of a try/catch statement.
+
         ```js
         function findAuthor(){
           throw new Error('couldn't find that author');
         }
+
         // synchronous
         try {
           findAuthor();
         } catch(reason) {
           // something went wrong
         }
+
         // async with promises
         findAuthor().catch(function(reason){
           // something went wrong
         });
         ```
+
         @method catch
         @param {Function} onRejection
         Useful for tooling.
@@ -4534,6 +4603,7 @@ var Clarifai =
    *
    *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
    *     incorrect length in some situations.
+
    * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
    * get the Object implementation, which is slower but behaves correctly.
    */

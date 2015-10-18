@@ -1,13 +1,4 @@
-process.env['CLARIFAI_CLIENT_ID'] = '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP';
-process.env['CLARIFAI_CLIENT_SECRET'] = 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigIW';
-
-var Clarifai = require('./clarifai-basic.js');
-
-var Firebase = require("firebase");
-
-var Imgur = require('./imgut.js');
-
-var clarifai = new Clarifai({id: process.env.CLARIFAI_CLIENT_ID, secret: process.env.CLARIFAI_CLIENT_SECRET});
+var clarifai = new Clarifai({id: '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP', secret: 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigIW'});
 
 //Clarifai.initAPI(process.env.CLARIFAI_CLIENT_ID, process.env.CLARIFAI_CLIENT_SECRET);
 
@@ -20,9 +11,9 @@ var clarifai = new Clarifai({id: process.env.CLARIFAI_CLIENT_ID, secret: process
 //	console.log( bThrottled ? ["throttled. service available again in",waitSeconds,"seconds"].join(' ') : "not throttled");
 //});
 
-function filterTags(localID, docID, tags, resultsCallback) {
+function filterTags(tags, resultsCallback) {
 	// Get a database reference to our posts
-	var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0uat1GgNnspmkDgNwP");
+	var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0vIUgQU9x1RDgQHEE_");
 
 	tags.sort();
 
@@ -43,7 +34,7 @@ function filterTags(localID, docID, tags, resultsCallback) {
 			    whitelist.shift();
 		    }
 		}
-		resultsCallback(true, localID, docID, filteredTags);
+		resultsCallback(true, filteredTags);
 	});
 }
 
@@ -100,15 +91,15 @@ function commonResultHandler(err, res, resultsCallback) {
 
 
 // Takes a url for a picture and a local ID for the url.
-// Calls resultsCallback which should be a function which takes a boolean representing success, a local id string, a doc id, and an array of tags
-function tagURL(URL, localId, resultCallback) {
-	//Clarifai.tagURL( URL , localId, function (errors, results) {commonResultHandler(errors, results, resultCallback)}); 
-}
-
-// Takes an array of urls for pictures and an array of local IDs for each url.
-// Calls resultsCallback multiple times. It should be a function which takes a boolean representing success, a local id string, a doc id, and an array of tags
-function tagURLs(URLs, localIds, resultsCallback) {
-	//Clarifai.tagURL( URLs , localIds, function (errors, results) {commonResultHandler(errors, results, resultsCallback)}); 
+// Calls resultsCallback which should be a function which takes a boolean representing success, and an array of tags
+function tagURL(URL, resultsCallback) {
+	clarifai.tag(URL).then(
+		function (result) {
+			filterTags(result['body']['results'][0]['result']['tag']['classes'],
+				resultsCallback
+			);
+		}
+	);
 }
 
 function tagLocalImage(image, localId, resultsCallback) {
@@ -126,7 +117,4 @@ function tagLocalImage(image, localId, resultsCallback) {
 // 			console.log(localId);
 // 			console.log(tags);
 // 		}});
-
-
-
-Clarifai.clearThrottleHandler();
+tagURL("http://cache3.asset-cache.net/xc/481194973.jpg?v=2&c=IWSAsset&k=2&d=ONn9rOMnWPpf-crMUDiw4Dij9s1btarsgyfiriOyg7J5RTmcgOfS37viaqpsJRS90", function (success, tags) {console.log(tags)});
