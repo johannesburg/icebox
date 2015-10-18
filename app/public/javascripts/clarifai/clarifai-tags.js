@@ -11,7 +11,7 @@ var clarifai = new Clarifai({id: '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP', sec
 //	console.log( bThrottled ? ["throttled. service available again in",waitSeconds,"seconds"].join(' ') : "not throttled");
 //});
 
-function filterTags(tags, resultsCallback) {
+function filterTags(URL, tags, resultsCallback) {
 	// Get a database reference to our posts
 	var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0vUW8ifj42bB3hUETz");
 
@@ -22,11 +22,14 @@ function filterTags(tags, resultsCallback) {
 	function (foodWordsWhitelist) {
 		var whitelist = foodWordsWhitelist.val();
 		var filteredTags = new Array();
+		var badTags = new Array();
 
 		while( tags.length > 0 && whitelist.length > 0 )
 		{   
-		    if (tags[0] < whitelist[0])
+		    if (tags[0] < whitelist[0]) {
+		    	badTags.add(tags[0]);
 		    	tags.shift();
+		    }
 		    else if (tags[0] > whitelist[0])
 		    	whitelist.shift();
 		    else {
@@ -34,11 +37,13 @@ function filterTags(tags, resultsCallback) {
 			    whitelist.shift();
 		    }
 		}
-		resultsCallback(true, filteredTags);
+		resultsCallback(true, URL, filteredTags);
+
+		giveFeedback(URL, null, badTags);
 	});
 }
 
-function commonResultHandler(err, res, resultsCallback) {
+/*function commonResultHandler(err, res, resultsCallback) {
 	if( err != null ) {
 		if( typeof err["status_code"] === "string" && err["status_code"] === "TIMEOUT") {
 			resultsCallback(false, "", "", "");
@@ -87,7 +92,7 @@ function commonResultHandler(err, res, resultsCallback) {
 			}
 		}			
 	}
-}
+}*/
 
 
 // Takes a url for a picture and a local ID for the url.
@@ -95,19 +100,26 @@ function commonResultHandler(err, res, resultsCallback) {
 function tagURL(URL, resultsCallback) {
 	clarifai.tag(URL).then(
 		function (result) {
+			filterTags(URL, 
+				result['body']['results'][0]['result']['tag']['classes'],
+				resultsCallback
+			);
+		}
+	);
+}
+
+function tagLocalImage(image, resultsCallback) {
+	console.log("alled");
+	//console.log(Imgur.upload(image));
+	//var imgurr = new Imgur(1e560a1d3b0f4a9, 1e560a1d3b0f4a9);
+	//var imageEndpoint = imgurr.imageEndpoint();
+	clarifai.tag("data:image/png;base64," + image).then(
+		function (result) {
 			filterTags(result['body']['results'][0]['result']['tag']['classes'],
 				resultsCallback
 			);
 		}
 	);
-
-	clarifai.formatOptions().then(function (stuff) {console.log("hi " + stuff)});
-}
-
-function tagLocalImage(image, resultsCallback) {
-	console.log("alled");
-	console.log(Imgur.upload(image));
-
 }
 
 // tagURL("http://www.travelingwellforless.com/wp-content/uploads/2016/01/groceries.jpg",
@@ -119,4 +131,5 @@ function tagLocalImage(image, resultsCallback) {
 // 			console.log(localId);
 // 			console.log(tags);
 // 		}});
-tagURL("http://cache3.asset-cache.net/xc/481194973.jpg?v=2&c=IWSAsset&k=2&d=ONn9rOMnWPpf-crMUDiw4Dij9s1btarsgyfiriOyg7J5RTmcgOfS37viaqpsJRS90", function (success, tags) {console.log(tags)});
+tagURL("http://cache3.asset-cache.net/xc/481194973.jpg?v=2&c=IWSAsset&k=2&d=ONn9rOMnWPpf-crMUDiw4Dij9s1btarsgyfiriOyg7J5RTmcgOfS37viaqpsJRS90",
+	function (success, URL, tags) {console.log(tags)});
