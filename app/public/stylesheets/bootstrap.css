@@ -4222,6 +4222,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-top-left-radius: 0;
 }
 
+.big-button {
+  width: 200px;
+  height: 200px;
+}
+
 .invisble-button {
   background: transparent;
   color: transparent;
