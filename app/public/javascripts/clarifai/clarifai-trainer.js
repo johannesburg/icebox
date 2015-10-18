@@ -62,11 +62,9 @@ function giveFeedback(URL, goodTags, badTags) {
     console.log("giveFeedback called");
 
     if (goodTags.length > 0) {
-        clarifai.positive(URL, goodTags.shift()).then(giveFeedback(URL, goodTags, badTags));
+        clarifai.positive(URL, goodTags.shift()).then(clarifai.train(URL)).then(giveFeedback(URL, goodTags, badTags));
     } else if (badTags.length > 0) {
-        clarifai.negative(URL, badTags.shift()).then(giveFeedback(URL, goodTags, badTags));
-    } else {
-        clarifai.train(URL);
+        clarifai.negative(URL, badTags.shift()).then(clarifai.train(URL)).then(giveFeedback(URL, goodTags, badTags));
     }
 
 
