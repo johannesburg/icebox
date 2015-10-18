@@ -78,7 +78,7 @@
           <div class="row bottom-buffer" id="imageInput" style="display: block">
             <div class="col-lg-7 text-center">
               <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" accept="image/*" capture="camera" style="display: none"/>
-              <button id="cameraButton" class="btn btn-default" type="button" onclick="cameraClick();" width="200" height="200">
+              <button id="cameraButton" class="btn btn-default big-button" type="button" onclick="cameraClick();" width="200" height="200">
                 <i class="fa fa-camera-retro fa-5x" onclick=""></i>
               </button>
             </div>
@@ -93,9 +93,14 @@
             </div>
           </div>
           
-          <div class="alert alert-dismissible alert-info text-center" id="addItemAlert">
+          <div class="alert alert-dismissible alert-info text-center" id="addItemAlert" style="display: block">
   			<button type="button" class="close" data-dismiss="alert">×</button>
   			<strong>Add an item!</strong> Take a photo by tapping the camera above or type in the name of a food and hit submit!
+		  </div>
+          
+          <div class="alert alert-dismissible alert-info text-center" id="selectTagsAlert" style="display: none">
+  			<button type="button" class="close" data-dismiss="alert">×</button>
+  			<strong>Select some tags!</strong> Pick through the suggested tags and add items to your fridge! Enter how many of each food you have to get cooking.
 		  </div>
           
           <div class="row">
