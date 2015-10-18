@@ -50,16 +50,6 @@
         </div>
       </div>
 
-
-	<div class="form-group">
-                    <div class="col-lg-10 col-lg-offset-2">
-                    <input type="file" accept="image/*" capture="camera">
-                      <button type="reset" class="btn btn-default">Cancel</button>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                  </div>
-
-
 <script type="text/javascript">
 	function fileSelected() {
 		var count = document.getElementById('fileToUpload').files.length;
@@ -126,7 +116,7 @@
         
     	<div id="details"></div>
     	<div>
-      		<input type="button" onclick="uploadFile()" value="Upload" />
+      		<input type="button" class="btn btn-primary" onclick="uploadFile()" value="Upload" />
     	</div>
  
     	<div id="progress"></div>
