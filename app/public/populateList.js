@@ -30,13 +30,11 @@ function start() {
 }
 
 function onAuth(authData) {
-  showTags(["apple", "orange", "grapefruit", "banana"]);
   document.getElementById("userName").innerHTML = authData.google.displayName;
   var firstname = authData.google.displayName.split(" ")[0];
   var suffix = "'s";
   if (firstname.charAt(firstname.length - 1) == 's')
     suffix = "'";
-  console.log(firstname.charAt(firstname.length - 1));
   document.getElementById("fridgeName").innerHTML = firstname + suffix + " Fridge"
   document.getElementById("preMain").style.display = "none";
   document.getElementById("mainContent").style.display = "block";
@@ -107,7 +105,9 @@ function fileSelected(e) {
    http.onload = function() {
       document.getElementById("loadingIcon").style.display = "none";
       var response = JSON.parse(http.responseText);
-      var url = "www.imgur.com/" + response.id;
+      console.log(http.responseText);
+      var url = "www.imgur.com/" + response.data.id;
+      console.log(url);
       tagURL(url, onTags);
     }
    http.open("POST", "https://api.imgur.com/3/upload");
@@ -120,11 +120,15 @@ function fileSelected(e) {
 }
 
 function onTags(success, url, tags) {
-  console.print(tags);
+  if (success) {
+    console.print(tags);
+    showTags(tags);
+  }
 }
 
 function addNewItem(name) {
   var row = document.createElement("tr");
+  row.id = name;
   var data = document.createElement("td");
 
   var text = document.createTextNode(name);
@@ -132,10 +136,15 @@ function addNewItem(name) {
   row.appendChild(data);
 
   var input = document.createElement("td");
-  input.innerHTML = "<input type=\"text\" value=\"0\">";
+  input.innerHTML = "<input type=\"text\" value=\"0\" />";
+  row.appendChild(input);
 
   var deleteButton = document.createElement("td");
   var deleteIcon = document.createElement("i");
+  deleteIcon.onclick = function(e) {
+    var row = document.getElementById(name);
+    row.parentNode.removeChild(row);
+  };
   deleteIcon.className = "fa fa-times fa-2x";
   deleteButton.appendChild(deleteIcon);
   row.appendChild(deleteButton);
