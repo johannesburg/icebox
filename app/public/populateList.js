@@ -47,6 +47,10 @@ function onAuth(authData) {
   });
 }
 
+function cameraClick(e) {
+  document.getElementById("fileToUpload").click();
+}
+
 function fileSelected(e) {
   console.log("Loading files")
   var count = document.getElementById('fileToUpload').files.length;
