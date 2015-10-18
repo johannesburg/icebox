@@ -39,7 +39,7 @@ function filterTags(URL, tags, resultsCallback) {
 		}
 		resultsCallback(true, URL, filteredTags);
 
-		giveFeedback(URL, null, badTags);
+		giveFeedback(URL, new Array(), badTags);
 	});
 }
 
