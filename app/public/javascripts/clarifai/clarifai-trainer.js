@@ -61,26 +61,55 @@ Array.prototype.diff = function(a) {
 function giveFeedback(URL, goodTags, badTags) {
     console.log("giveFeedback called");
 
-    if (goodTags.length > 0) {
-        clarifai.positive(URL, goodTags.shift()).then(clarifai.train(URL)).then(giveFeedback(URL, goodTags, badTags));
-    } else if (badTags.length > 0) {
-        clarifai.negative(URL, badTags.shift()).then(clarifai.train(URL)).then(giveFeedback(URL, goodTags, badTags));
-    }
+    // if (goodTags.length > 0) {
+    //     clarifai.positive(URL, goodTags.shift()).then(clarifai.train(URL)).then(giveFeedback(URL, goodTags, badTags));
+    // } else if (badTags.length > 0) {
+    //     clarifai.negative(URL, badTags.shift()).then(clarifai.train(URL)).then(giveFeedback(URL, goodTags, badTags));
+    // }
 
 
     //Clarifai.feedbackAddTagsToDocids(docids, addTags, null,null);
     //Clarifai.feedbackRemoveTagsFromDocids(docids, removeTags, null, null);
     //TODO: add correctTags to whitelist
 
-    // goodTags.forEach(function (tag) {
-    //     clarifai.positive(URL, tag);
-    // });
+    goodTags.forEach(function (tag) {
+        clarifai.positive(URL, tag, callback).then(
+            promiseResolved,
+            promiseRejected
+        );
 
-    // badTags.forEach(function (tag) {
-    //     clarifai.negative(URL, tag);
-    // });
+        clarifai.train(tag, callback).then(
+            promiseResolved,
+            promiseRejected
+        );
+    });
 
-    // clarifai.train(URL);
+    badTags.forEach(function (tag) {
+        clarifai.negative(URL, tag, callback).then(
+            promiseResolved,
+            promiseRejected
+        );
+
+        clarifai.train(tag, callback).then(
+            promiseResolved,
+            promiseRejected
+        );
+    });
+
+
 }
+
+function promiseResolved(obj){
+  console.log('Promise resolved', obj);
+}
+
+function promiseRejected(obj){
+  console.log('Promise rejected', obj);
+}
+
+function callback(obj){
+  console.log('callback', obj);
+}
+
 
 //exampleTagSingleURL(docids, ourids);
