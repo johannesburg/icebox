@@ -47,57 +47,6 @@ function filterTags(URL, tags, resultsCallback) {
 	});
 }
 
-/*function commonResultHandler(err, res, resultsCallback) {
-	if( err != null ) {
-		if( typeof err["status_code"] === "string" && err["status_code"] === "TIMEOUT") {
-			resultsCallback(false, "", "", "");
-			console.log("TAG request timed out");
-		}
-		else if( typeof err["status_code"] === "string" && err["status_code"] === "ALL_ERROR") {
-			resultsCallback(false, "", "", "");
-			console.log("TAG request received ALL_ERROR. Contact Clarifai support if it continues.");				
-		}
-		else if( typeof err["status_code"] === "string" && err["status_code"] === "TOKEN_FAILURE") {
-			resultsCallback(false, "", "", "");
-			console.log("TAG request received TOKEN_FAILURE. Contact Clarifai support if it continues.");				
-		}
-		else if( typeof err["status_code"] === "string" && err["status_code"] === "ERROR_THROTTLED") {
-			resultsCallback(false, "", "", "");
-			console.log("Clarifai host is throttling this application.");				
-		}
-		else {
-			resultsCallback(false, "", "", "");
-			console.log("TAG request encountered an unexpected error." + err);		
-		}
-	}
-	else {
-		// if some images were successfully tagged and some encountered errors,
-		// the status_code PARTIAL_ERROR is returned. In this case, we inspect the
-		// status_code entry in each element of res["results"] to evaluate the individual
-		// successes and errors. if res["status_code"] === "OK" then all images were 
-		// successfully tagged.
-		if( typeof res["status_code"] === "string" && 
-			( res["status_code"] === "OK" || res["status_code"] === "PARTIAL_ERROR" )) {
-			// the request completed successfully
-			for( i = 0; i < res.results.length; i++ ) {
-				if( res["results"][i]["status_code"] === "OK" ) {
-					filterTags(res.results[i].local_id,
-						res.results[i].docid,
-						res["results"][i].result["tag"]["classes"],
-						resultsCallback);
-				}
-				else {
-					resultsCallback(false,
-						res.results[i].local_id,
-						res.results[i].docid,
-						"")
-				}
-			}
-		}			
-	}
-}*/
-
-
 // Takes a url for a picture and a local ID for the url.
 // Calls resultsCallback which should be a function which takes a boolean representing success, and an array of tags
 function tagURL(URL, resultsCallback) {
@@ -112,29 +61,3 @@ function tagURL(URL, resultsCallback) {
 		}
 	);
 }
-
-// function tagLocalImage(image, resultsCallback) {
-// 	console.log("alled");
-// 	//console.log(Imgur.upload(image));
-// 	//var imgurr = new Imgur(1e560a1d3b0f4a9, 1e560a1d3b0f4a9);
-// 	//var imageEndpoint = imgurr.imageEndpoint();
-// 	clarifai.tag("data:image/png;base64," + image).then(
-// 		function (result) {
-// 			filterTags(result['body']['results'][0]['result']['tag']['classes'],
-// 				resultsCallback
-// 			);
-// 		}
-// 	);
-// }
-
-// tagURL("http://www.travelingwellforless.com/wp-content/uploads/2016/01/groceries.jpg",
-// 	"canadian groceries", 
-// 	function (success, localId, docId, tags) {
-// 		if (!success)
-// 			console.log("error: " + localId);
-// 		else {
-// 			console.log(localId);
-// 			console.log(tags);
-// 		}});
-// tagURL("http://cache3.asset-cache.net/xc/481194973.jpg?v=2&c=IWSAsset&k=2&d=ONn9rOMnWPpf-crMUDiw4Dij9s1btarsgyfiriOyg7J5RTmcgOfS37viaqpsJRS90",
-// 	function (success, URL, tags) {console.log(tags)});

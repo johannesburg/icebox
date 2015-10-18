@@ -61,19 +61,28 @@ Array.prototype.diff = function(a) {
 function giveFeedback(URL, goodTags, badTags) {
     console.log("giveFeedback called");
 
+    if (goodTags.length() > 0) {
+        clarifai.positive(URL, goodTags.shift()).then(giveFeedback(URL, goodTags, badTags));
+    } else if (badTags.length() > 0) {
+        clarifai.negative(URL, badTags.shift()).then(giveFeedback(URL, goodTags, badTags));
+    } else {
+        clarifai.train(URL);
+    }
+
+
     //Clarifai.feedbackAddTagsToDocids(docids, addTags, null,null);
     //Clarifai.feedbackRemoveTagsFromDocids(docids, removeTags, null, null);
     //TODO: add correctTags to whitelist
 
-    goodTags.forEach(function (tag) {
-        clarifai.positive(URL, tag);
-    });
+    // goodTags.forEach(function (tag) {
+    //     clarifai.positive(URL, tag);
+    // });
 
-    badTags.forEach(function (tag) {
-        clarifai.negative(URL, tag);
-    });
+    // badTags.forEach(function (tag) {
+    //     clarifai.negative(URL, tag);
+    // });
 
-    clarifai.train(URL);
+    // clarifai.train(URL);
 }
 
 //exampleTagSingleURL(docids, ourids);
