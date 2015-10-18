@@ -1,11 +1,4 @@
-var Clarifai = require('./clarifai-basic.js');
-
-process.env['CLARIFAI_CLIENT_ID'] = '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP';
-process.env['CLARIFAI_CLIENT_SECRET'] = 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigIW';
-
-//Clarifai.initAPI(process.env.CLARIFAI_CLIENT_ID, process.env.CLARIFAI_CLIENT_SECRET);
-
-var clarifai = new Clarifai({id: process.env.CLARIFAI_CLIENT_ID, secret: process.env.CLARIFAI_CLIENT_SECRET});
+var clarifai = new Clarifai({id: '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP', secret: 'QTU11PsOato83dZz5z_pxzbCapAQbtNAyMeaigIW'});
 
 function commonResultHandler( err, res ) {
   if( err != null ) {
@@ -66,10 +59,10 @@ Array.prototype.diff = function(a) {
 //@param addedTags new tags added by user
 //@param selectedTags tags selected by user
 function giveFeedback(docids, originalTags, addedTags, selectedTags) {
-  val removeTags = originalTags.diff(selectedTags);
+  var removeTags = originalTags.diff(selectedTags);
   Clarifai.feedbackAddTagsToDocids(docids, addTags, null,null);
   Clarifai.feedbackRemoveTagsFromDocids(docids, removeTags, null, null);
   //TODO: add correctTags to whitelist
 }
 
-exampleTagSingleURL(docids, ourids);
+//exampleTagSingleURL(docids, ourids);
