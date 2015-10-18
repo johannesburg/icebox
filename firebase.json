@@ -1,6 +1,6 @@
 {
   "firebase": "boiling-inferno-5486",
-  "public": "public",
+  "public": "app",
   "ignore": [
     "firebase.json",
     "**/.*",
