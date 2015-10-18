@@ -59,6 +59,8 @@ Array.prototype.diff = function(a) {
 //@param addedTags new tags added by user
 //@param selectedTags tags selected by user
 function giveFeedback(URL, goodTags, badTags) {
+    console.log("giveFeedback called");
+
     //Clarifai.feedbackAddTagsToDocids(docids, addTags, null,null);
     //Clarifai.feedbackRemoveTagsFromDocids(docids, removeTags, null, null);
     //TODO: add correctTags to whitelist

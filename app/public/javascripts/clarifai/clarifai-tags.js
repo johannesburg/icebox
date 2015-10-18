@@ -12,6 +12,8 @@ var clarifai = new Clarifai({id: '34EZ1WNwGt7dvL08d-k2BNfutb-ZqqOh8mmdQXNP', sec
 //});
 
 function filterTags(URL, tags, resultsCallback) {
+	console.log("filterTags called");
+
 	// Get a database reference to our posts
 	var firebase = new Firebase("https://boiling-inferno-5486.firebaseio.com/foodwords/-K0vUW8ifj42bB3hUETz");
 
@@ -38,8 +40,10 @@ function filterTags(URL, tags, resultsCallback) {
 		    }
 		}
 		resultsCallback(true, URL, filteredTags);
+		console.log("resultsCallback returned");
 
 		giveFeedback(URL, new Array(), badTags);
+		console.log("giveFeedback returned");
 	});
 }
 
@@ -98,6 +102,8 @@ function filterTags(URL, tags, resultsCallback) {
 // Takes a url for a picture and a local ID for the url.
 // Calls resultsCallback which should be a function which takes a boolean representing success, and an array of tags
 function tagURL(URL, resultsCallback) {
+	console.log("tagURL called");
+
 	clarifai.tag(URL).then(
 		function (result) {
 			filterTags(URL, 
@@ -108,19 +114,19 @@ function tagURL(URL, resultsCallback) {
 	);
 }
 
-function tagLocalImage(image, resultsCallback) {
-	console.log("alled");
-	//console.log(Imgur.upload(image));
-	//var imgurr = new Imgur(1e560a1d3b0f4a9, 1e560a1d3b0f4a9);
-	//var imageEndpoint = imgurr.imageEndpoint();
-	clarifai.tag("data:image/png;base64," + image).then(
-		function (result) {
-			filterTags(result['body']['results'][0]['result']['tag']['classes'],
-				resultsCallback
-			);
-		}
-	);
-}
+// function tagLocalImage(image, resultsCallback) {
+// 	console.log("alled");
+// 	//console.log(Imgur.upload(image));
+// 	//var imgurr = new Imgur(1e560a1d3b0f4a9, 1e560a1d3b0f4a9);
+// 	//var imageEndpoint = imgurr.imageEndpoint();
+// 	clarifai.tag("data:image/png;base64," + image).then(
+// 		function (result) {
+// 			filterTags(result['body']['results'][0]['result']['tag']['classes'],
+// 				resultsCallback
+// 			);
+// 		}
+// 	);
+// }
 
 // tagURL("http://www.travelingwellforless.com/wp-content/uploads/2016/01/groceries.jpg",
 // 	"canadian groceries", 
@@ -131,5 +137,5 @@ function tagLocalImage(image, resultsCallback) {
 // 			console.log(localId);
 // 			console.log(tags);
 // 		}});
-tagURL("http://cache3.asset-cache.net/xc/481194973.jpg?v=2&c=IWSAsset&k=2&d=ONn9rOMnWPpf-crMUDiw4Dij9s1btarsgyfiriOyg7J5RTmcgOfS37viaqpsJRS90",
-	function (success, URL, tags) {console.log(tags)});
+// tagURL("http://cache3.asset-cache.net/xc/481194973.jpg?v=2&c=IWSAsset&k=2&d=ONn9rOMnWPpf-crMUDiw4Dij9s1btarsgyfiriOyg7J5RTmcgOfS37viaqpsJRS90",
+// 	function (success, URL, tags) {console.log(tags)});
