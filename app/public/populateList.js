@@ -1,5 +1,7 @@
 var ref;
 
+var $ = function(tag) {return document.getElementById(tag);};
+
 function start() {
   ref = new Firebase("https://boiling-inferno-5486.firebaseio.com/");
 
@@ -8,43 +10,49 @@ function start() {
       console.log("Login Failed!", error);
     } else {
       console.log("Authenticated successfully with payload:", authData);
+      // save the user's profile into the database so we can list users,
+      // use them in Security and Firebase Rules, and show profiles
+      ref.child("users").child(authData.uid).set({
+        provider: authData.provider,
+        name: authData.google.displayName
+      });
       onAuth(authData);
     }
   });
 }
 
 function onAuth(authData) {
+  document.getElementById("userName").innerHTML = authData.google.displayName;
   document.getElementById("mainContent").style.display = "block";
 
-  var input = $("itemInput");
+  var userRef = new Firebase("https://boiling-inferno-5486.firebaseio.com/userData/" + authData.uid + "/");
+
+  var input = document.getElementById("itemInput");
   input.onkeypress = function (e) {
     if (e.keyCode == 13) {
-      var name = input.value;
-      ref.push({"itemName": name});
       e.preventDefault();
+      var name = input.value;
+      userRef.push({"itemName": name});
       return false;
     }
   };
   
-  ref.on('child_added', function(snapshot) {
+  userRef.on('child_added', function(snapshot) {
      var newItem = snapshot.val();
      addNewItem(newItem.itemName);
   });
 }
 
 function addNewItem(name) {
-  var newEntry = document.createElement("div");
+  var row = document.createElement("tr");
+  var data = document.createElement("td");
 
   var text = document.createTextNode(name);
-  newEntry.appendChild(text);
+  data.appendChild(text);
+  row.appendChild(data);
 
   var parent = document.getElementById("itemTable");
-  parent.appendChild(newEntry);
+  parent.appendChild(row);
 };
-
-function $(tag) {
-  return document.getElementById(tag);
-}
-
 
 window.onload = start;
