@@ -4228,7 +4228,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-right: 15px;
 }
 
-.bottom-buffer { margin-bottom:30px; }
+.bottom-buffer { margin-bottom:30px; 
+margin-top: 30px;}
 .navbar {
   position: relative;
   min-height: 40px;

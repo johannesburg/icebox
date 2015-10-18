@@ -102,7 +102,7 @@ function tagURL(URL, resultsCallback) {
 	);
 }
 
-function tagLocalImage(image, localId, resultsCallback) {
+function tagLocalImage(image, resultsCallback) {
 	var imgur = Imgur.init();
 	imgur.upload(file);
 

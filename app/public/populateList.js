@@ -22,6 +22,7 @@ function start() {
       }
     });
   }
+  ref.onAuth(onAuth);
 }
 
 function onAuth(authData) {
@@ -53,6 +54,8 @@ function cameraClick(e) {
 
 function fileSelected(e) {
   console.log("Loading files")
+  document.getElementById("loadingIcon").style.display = "block";
+  document.getElementById("loadingIcon").style.display = "block";
   var count = document.getElementById('fileToUpload').files.length;
   for (var index = 0; index < count; index ++) {
     var file = document.getElementById('fileToUpload').files[index];
@@ -62,27 +65,31 @@ function fileSelected(e) {
     } else {
       fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
     }
-    document.getElementById('details').innerHTML += 'Name: ' + file.name + '<br>Size: ' + fileSize + '<br>Type: ' + file.type;
-    document.getElementById('details').innerHTML += '<p>';
   }
-
-}
-
-function uploadFile(e) {
   console.log("Uploading file");
   var file = document.getElementById('fileToUpload').files[0];
-  var reader = new FileReader();
-  reader.onload = (function(theFile) {
-    return function(e) {
-      var filePayload = e.target.result;
-      var f = new Firebase(basePath + '/imageLoading/');
-      // Set the file payload to Firebase and register an onComplete handler to stop the spinner and show the preview
-      f.set(filePayload, function() { 
-        console.log("upload complete");
-      });
+  // Usage
+  getDataUri(URL.createObjectURL(file), function(dataUri) {
+     var imageRef = new Firebase(basePath + "/imageLoading/");
+     imageRef.set(dataUri);
+  });
+}
+
+function getDataUri(url, callback) {
+    var image = new Image();
+
+    image.onload = function () {
+        var canvas = document.createElement('canvas');
+        canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
+        canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
+
+        canvas.getContext('2d').drawImage(this, 0, 0);
+
+        // Get raw image data
+        callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
     };
-  })(file);
-  reader.readAsDataURL(file);
+
+    image.src = url;
 }
 
 
